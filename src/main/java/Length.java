@@ -20,8 +20,9 @@ public abstract class Length {
         throw new RuntimeException("undefined unit");
     }
 
-    public Length as(Unit convertUnit) {
-        return createLength(getValue(convertUnit), convertUnit);
+    public Length as(Unit unit) {
+        double value = getValue(unit);
+        return createLength(value, unit);
     }
 
     protected abstract double getValue(Unit unit);
