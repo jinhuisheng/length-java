@@ -1,46 +1,36 @@
-public class Length {
-    private final double value;
-    private final String unit;
+public abstract class Length {
+    protected final double value;
+    protected final Unit unit;
 
-    public Length(double val, String uinnt) {
-        this.value = val;
-        this.unit = uinnt;
+    protected Length(double value, Unit unit) {
+        this.value = value;
+        this.unit = unit;
     }
 
-    public Length as(String u) {
-        Length len = this;
-        if (this.unit.equals("f")) {
-            if (u.equals("yard")) {
-                len = new Length(this.value / 3, u);
-            } else if (u.equals("inch")) {
-                len = new Length(this.value * 12, u);
-            }
+    public static Length createLength(double value, Unit unit) {
+        if (unit == Unit.Foot) {
+            return new FootLength(value, unit);
         }
-
-        if (this.unit.equals("yard")) {
-            if (u.equals("inch")) {
-                len = new Length(this.value * 36, u);
-            } else if (u.equals("f")){
-                len = new Length(this.value * 3, u);
-            }
+        if (unit == Unit.Yard) {
+            return new YardLength(value, unit);
         }
-
-        if (this.unit.equals("inch")) {
-            if (u.equals("f")) {
-                len = new Length(this.value / 12, u);
-            } else if (u.equals("yard")) {
-                len = new Length(this.value / 36, u);
-            }
+        if (unit == Unit.Inch) {
+            return new InchLength(value, unit);
         }
-
-        return len;
+        throw new RuntimeException("undefined unit");
     }
 
-    public double getVal() {
+    public Length as(Unit convertUnit) {
+        return createLength(getValue(convertUnit), convertUnit);
+    }
+
+    protected abstract double getValue(Unit unit);
+
+    public double getValue() {
         return this.value;
     }
 
-    public String getUinnt() {
-        return this.unit;
+    public Unit getUnit() {
+        return unit;
     }
 }
